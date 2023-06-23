@@ -1,0 +1,31 @@
+version: "3"
+services:
+  mysql:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - 3300:3306
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+  app:
+    build:
+      dockerfile: Dockerfile.dev
+      context: .
+    volumes:
+      - .:/usr/app/app
+      - /usr/app/app/node_modules
+    depends_on:
+      - mysql
+  nginx:
+    restart: always
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./nginx
+    ports:
+      - "${NGINX_PORT}:80"
+    depends_on:
+      - app
