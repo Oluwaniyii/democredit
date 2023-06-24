@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import authAPI from "../services/auth/auth_api";
+import authAPI from "../services/auth/authApi";
 import WalletAPI from "../services/wallet/WalletAPI";
 import transaction_api from "../services/transaction/transaction_api";
 
@@ -11,5 +11,9 @@ router.get("/", function(req: Request, res: Response, next: NextFunction) {
 router.get("/error", function(req: Request, res: Response, next: NextFunction) {
   throw new Error("Server ran into an error"); // error test route
 });
+
+// Service routes
+router.use("/accounts", authAPI);
+router.use("/wallets", WalletAPI);
 
 export default router;
