@@ -15,5 +15,11 @@ router.get("/error", function(req: Request, res: Response, next: NextFunction) {
 // Service routes
 router.use("/accounts", authAPI);
 router.use("/wallets", WalletAPI);
+router.use("/transactions", transaction_api);
+
+// view pages
+router.get("/pg/transaction/fund", (req: Request, res: Response) => {
+  res.render("payment");
+});
 
 export default router;
