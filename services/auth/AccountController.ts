@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import AccountView from "./AccountView";
 import AccountRegister from "./AccountRegister";
 import AccountLogin from "./AccountLogin";
-import AccountRepository from "./KnexAccountRepository";
+import AccountRepository from "./AccountRepository";
 import AccountResponseFormat from "./AccountResponseFormat";
 import { signUp as signUpValidation, signIn as signInValidation } from "./AccountValidation";
 import Bcrypt from "../../libraries/bcrypt";

@@ -42,10 +42,10 @@ class Application {
     this._server.use(function(req, res, next) {
       res.locals.authenticated_user = {
         // custom credentials for now
-        id: "3361df76-3691-4bce-9bfc-3424c58a1314",
-        name: "Jane Doe",
+        id: "c0dcbe60-dd6a-4bf6-821f-20a0f39e331f",
+        name: "John Doe",
         email: "john@gmail.com",
-        wallet_id: "0a477123-7935-4ca2-a884-a1fc99831f21"
+        wallet_id: "73ace0d7-c9e5-4ce2-b63b-343478a727c2"
       };
       next();
     });

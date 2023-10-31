@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import authAPI from "../services/auth/authApi";
 import WalletAPI from "../services/wallet/WalletAPI";
-import transaction_api from "../services/transaction/transaction_api";
+import transactionApi from "../services/transaction/TransactionAPI";
 
 const router = require("express").Router();
 
@@ -15,7 +15,7 @@ router.get("/error", function(req: Request, res: Response, next: NextFunction) {
 // Service routes
 router.use("/accounts", authAPI);
 router.use("/wallets", WalletAPI);
-router.use("/transactions", transaction_api);
+router.use("/transactions", transactionApi);
 
 // view pages
 router.get("/pg/transaction/fund", (req: Request, res: Response) => {
