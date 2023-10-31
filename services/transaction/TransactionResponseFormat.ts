@@ -24,8 +24,8 @@ class TransactionResponseFormat {
   }
 
   public static completeFund(res: Response, actionData: any): Response {
-    console.log(actionData);
     const { transaction, wallet } = actionData;
+    const { id: wallet_id, balance } = wallet;
     const {
       id,
       status,
@@ -35,9 +35,8 @@ class TransactionResponseFormat {
       created_at,
       authorizing_bank,
       initiator_name,
-      initiator_account
+      initiatingWallet
     } = transaction;
-    const { id: wallet_id, balance } = wallet;
 
     const response: any = {};
     const statusCode = 200;
@@ -46,13 +45,57 @@ class TransactionResponseFormat {
     const data: any = {};
 
     data["transaction"] = {};
-
     data["transaction"]["id"] = id;
     data["transaction"]["transaction_type"] = transactionType;
     data["transaction"]["amount"] = amount;
     data["transaction"]["status"] = status;
     data["transaction"]["channel"] = channel;
-    data["transaction"]["initiating_wallet"] = initiator_account;
+    data["transaction"]["initiatingWallet"] = initiatingWallet;
+    data["transaction"]["created_at"] = created_at;
+
+    data["wallet"] = {};
+    data["wallet"]["id"] = wallet_id;
+    data["wallet"]["balance"] = balance;
+
+    response.success = success;
+    response.message = message;
+    response.data = data;
+
+    res.status(statusCode);
+    res.json(response);
+
+    return res;
+  }
+
+  public static wallet2wallet(res: Response, actionData: any): Response {
+    const { transaction, wallet } = actionData;
+
+    const { id: wallet_id, balance } = wallet;
+
+    const {
+      id,
+      status,
+      transactionType,
+      amount,
+      created_at,
+      initiator_name,
+      initiatingWallet,
+      receivingWallet
+    } = transaction;
+
+    const response: any = {};
+    const statusCode = 200;
+    const success = true;
+    const message = "ok";
+    const data: any = {};
+
+    data["transaction"] = {};
+    data["transaction"]["id"] = id;
+    data["transaction"]["transaction_type"] = transactionType;
+    data["transaction"]["amount"] = amount;
+    data["transaction"]["from"] = initiatingWallet;
+    data["transaction"]["to"] = receivingWallet;
+    data["transaction"]["status"] = status;
     data["transaction"]["created_at"] = created_at;
 
     data["wallet"] = {};
