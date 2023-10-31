@@ -1,5 +1,5 @@
 import IWalletRepository from "./IWalletRepository";
-import MModels from "../shared/Model/";
+import MModels from "../shared/Model";
 import Wallet from "./Wallet";
 import AppException from "../AppException";
 import { domainError } from "../domainError";

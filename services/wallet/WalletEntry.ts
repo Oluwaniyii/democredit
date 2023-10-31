@@ -3,11 +3,9 @@ import WalletView from "./WalletView";
 import WalletDeposit from "./WalletDeposit";
 import WalletWithdraw from "./WalletWithdraw";
 import WalletRepository from "./WalletRepository";
-import KnexWalletRepository from "./KnexWalletRepository";
 import WalletCreate from "./WalletCreate";
 
-const walletRepository = new KnexWalletRepository();
-
+const walletRepository = new WalletRepository();
 class WalletEntry implements IWalletService {
   constructor() {}
   /**
