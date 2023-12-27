@@ -5,6 +5,7 @@ import WalletService from "../wallet/WalletService";
 import PaystackService from "../PaystackService";
 import TransactionResponseFormat from "./TransactionResponseFormat";
 import TransactionWallet2Wallet from "./TransactionWallet2Wallet";
+import TransactionWallet2Other from "./TransactionWallet2Other";
 
 const transactionRepository = new TransactionRepository();
 const walletService = new WalletService();
@@ -58,6 +59,30 @@ class TransactionController {
 
       const action = await transactionWallet2Wallet.initialize();
       return TransactionResponseFormat.wallet2wallet(res, action);
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  public static async transactionWallet2Other(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { wallet_id, id } = res.locals.authenticated_user;
+      const { amount, bank_code, account_number } = req.body;
+
+      const transactionWallet2Other = new TransactionWallet2Other(
+        transactionRepository,
+        walletService,
+        paystackService
+      );
+
+      transactionWallet2Other.setUserId(id);
+      transactionWallet2Other.setWalletId(wallet_id);
+      transactionWallet2Other.setAmount(amount || 200);
+      transactionWallet2Other.setBankCode(bank_code);
+      transactionWallet2Other.setAccountNumber(account_number);
+
+      const action = await transactionWallet2Other.init();
+      return TransactionResponseFormat.wallet2other(res, action);
     } catch (e) {
       next(e);
     }
