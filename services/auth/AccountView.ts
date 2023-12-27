@@ -1,26 +1,25 @@
 import IAccountRepository from "./IAccountRepository";
 import Account from "./Account";
-
+import IWalletService from "../../services/wallet/IWalletService";
 import AppException from "../AppException";
 import { domainError } from "../domainError";
 
-type AccountViewReturnValue = {
-  account: Account;
-};
-
 class AccountView {
-  private _repository: IAccountRepository;
   private accountId: string;
 
-  constructor(accountRepository: IAccountRepository) {
+  private _repository: IAccountRepository;
+  private _walletService: IWalletService;
+
+  constructor(accountRepository: IAccountRepository, walletService: IWalletService) {
     this._repository = accountRepository;
+    this._walletService = walletService;
   }
 
   setAccountId(accountId: string) {
     this.accountId = accountId;
   }
 
-  async init(): Promise<AccountViewReturnValue> {
+  async init(): Promise<any> {
     const account: Account | null = await this._repository.getAccountById(this.accountId);
     if (!account)
       throw new AppException(
@@ -28,7 +27,9 @@ class AccountView {
         `account with the id ${this.accountId} does not exist`
       );
 
-    return { account };
+    const wallet: any = (await this._walletService.getUserWallet(account.getId()))["wallet"];
+
+    return { account, wallet };
   }
 }
 
