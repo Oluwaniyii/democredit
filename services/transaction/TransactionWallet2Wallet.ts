@@ -50,6 +50,26 @@ class TransactionWallet2Wallet extends Transaction {
     this.receiverWallet = receiverWallet;
   }
 
+  private async createLogs() {
+    await this._repository.writeLog(
+      this.initiatingWallet,
+      this.id,
+      this.amount,
+      "DEBIT",
+      this.initiatorWallet.getBalance(),
+      `wallet transfer to ${this.receiverWallet.getAccountName()} ${this.receiverWallet.getId()}`
+    );
+
+    await this._repository.writeLog(
+      this.receivingWallet,
+      this.id,
+      this.amount,
+      "CREDIT",
+      this.receiverWallet.getBalance(),
+      `wallet deposit from ${this.initiatorWallet.getAccountName()} ${this.initiatorWallet.getId()}`
+    );
+  }
+
   async createTransfer(): Promise<any> {
     const { id, created_at } = await this._repository.createTransactionWallet2Wallet(
       this.serialize()
@@ -63,15 +83,18 @@ class TransactionWallet2Wallet extends Transaction {
     await this.getInitiatorWallet();
     await this.getReceiverWallet();
 
-    this.initiatorWallet = (await this._walletService.withdraw(this.initiatingWallet, this.amount))[
-      "wallet"
-    ];
-    this.receiverWallet = (await this._walletService.deposit(this.receivingWallet, this.amount))[
-      "wallet"
-    ];
+    this.initiatorWallet = (
+      await this._walletService.withdraw(this.initiatingWallet, this.amount, this.id)
+    )["wallet"];
+
+    this.receiverWallet = (
+      await this._walletService.deposit(this.receivingWallet, this.amount, this.id)
+    )["wallet"];
+
     this.status = "SUCCESS";
 
     await this.createTransfer();
+    await this.createLogs();
 
     return {
       transaction: this.serialize(),
