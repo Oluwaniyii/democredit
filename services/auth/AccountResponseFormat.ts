@@ -54,10 +54,11 @@ class AccountResponseFormat {
   }
 
   public static signIn(res: Response, actionData: any): Response {
-    const { account, session } = actionData;
+    const { account, session, wallet } = actionData;
 
     const { id: user_id, name, email, phone, created_at } = account;
     const { id: session_id, issued_at, expire_in } = session;
+    const { id: wallet_id } = wallet;
 
     const response: any = {};
     const statusCode = 200;
@@ -71,6 +72,10 @@ class AccountResponseFormat {
     data["user"]["email"] = email;
     data["user"]["phone"] = phone;
     data["user"]["created_at"] = created_at;
+
+    data["wallet"] = {};
+    data["wallet"]["id"] = wallet_id;
+    data["wallet"]["url"] = `/wallets/${wallet_id}`;
 
     data["session"] = {};
     data["session"]["id"] = session_id;

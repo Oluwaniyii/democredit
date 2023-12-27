@@ -1,17 +1,25 @@
 import IAccountRepository from "./IAccountRepository";
+import Account from "./Account";
+import IWalletService from "../../services/wallet/IWalletService";
+import JWT from "../../libraries/jwt";
 import AppException from "../AppException";
 import { domainError } from "../domainError";
-import Account from "./Account";
 
 class AccountLogin {
-  private _repository: IAccountRepository;
-  private _uuid: any;
   private email: string;
   private password: string;
 
-  constructor(accountRepository: IAccountRepository, UUID: any) {
+  private account: Account;
+  private wallet: any;
+
+  private _repository: IAccountRepository;
+  private _uuid: any;
+  private _walletService: IWalletService;
+
+  constructor(accountRepository: IAccountRepository, UUID: any, walletService: IWalletService) {
     this._repository = accountRepository;
     this._uuid = UUID;
+    this._walletService = walletService;
   }
 
   setEmail(email: string): void {
@@ -26,28 +34,42 @@ class AccountLogin {
     let isEmailAvailable;
     let isAuthenticated = false;
 
-    isEmailAvailable = await this._repository.emailExists(this.email);
-    if (isEmailAvailable) isAuthenticated = true;
+    const account: Account | null = await this._repository.getAccountByEmail(this.email);
+    if (!account) return isAuthenticated;
 
+    isAuthenticated = true;
+    this.account = account;
     return isAuthenticated;
   }
 
   async issueNewSession() {
+    const issued_at = new Date().getTime();
+    const expire_in = 86400000;
+
+    const payload = {
+      id: this.account.getId(),
+      name: this.account.getName(),
+      email: this.account.getEmail(),
+      wallet_id: this.wallet.id,
+      issued_at,
+      expire_in
+    };
+    const jwt_token = await JWT.sign(payload);
+
     return {
-      id: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.${this._uuid.generate()}.ny2Gja7Y6kVB1v34fKaAbKJhNoLI879o2IV2wgM2fw8`,
-      issued_at: 1685145130685,
-      expire_in: 86400000
+      id: jwt_token,
+      issued_at,
+      expire_in
     };
   }
 
   async init() {
     if (!(await this.authenticate())) throw new AppException(domainError.INVALID_CREDENTIALS);
 
-    // create a fake session token
-    const account: Account | null = await this._repository.getAccountByEmail(this.email);
+    this.wallet = (await this._walletService.getUserWallet(this.account.getId()))["wallet"];
     const session = await this.issueNewSession();
 
-    return { account: account, session: session };
+    return { account: this.account, wallet: this.wallet, session: session };
   }
 }
 
