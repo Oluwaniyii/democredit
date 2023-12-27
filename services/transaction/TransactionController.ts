@@ -7,6 +7,7 @@ import TransactionResponseFormat from "./TransactionResponseFormat";
 import TransactionWallet2Wallet from "./TransactionWallet2Wallet";
 import TransactionWallet2Other from "./TransactionWallet2Other";
 import TransactionViewMany from "./TransactionViewMany";
+import TransactionView from "./TransactionView";
 
 const transactionRepository = new TransactionRepository();
 const walletService = new WalletService();
@@ -98,6 +99,20 @@ class TransactionController {
 
       const action = await transactionViewMany.init();
       return TransactionResponseFormat.getTransactionHistory(res, action);
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  public static async getTransaction(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id: transactionId } = req.params;
+
+      const transactionView = new TransactionView(transactionRepository, walletService);
+      transactionView.setTransactionId(transactionId);
+
+      const action = await transactionView.init();
+      return TransactionResponseFormat.getTransaction(res, action);
     } catch (e) {
       next(e);
     }

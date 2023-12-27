@@ -181,7 +181,6 @@ class TransactionResponseFormat {
 
       return {
         id,
-        // transaction_id,
         entry_type,
         amount,
         description,
@@ -207,6 +206,118 @@ class TransactionResponseFormat {
     res.json(response);
 
     return res;
+  }
+
+  public static getTransaction(res: Response, actionData: any): Response {
+    const { transactionType } = actionData;
+
+    const response: any = {};
+    const statusCode = 200;
+    const success = true;
+    const message = "ok";
+
+    let data: any;
+
+    if (transactionType === "WITHDRAW") data = TransactionResponseFormat.tt1(actionData);
+    else if (transactionType === "TRANSFER") data = TransactionResponseFormat.tt2(actionData);
+    else if (transactionType === "FUND") data = TransactionResponseFormat.tt3(actionData);
+
+    response.success = success;
+    response.message = message;
+    response.data = data;
+
+    res.status(statusCode);
+    res.json(response);
+
+    return res;
+  }
+
+  static tt1(s: any): any {
+    const { transaction, recipient } = s;
+
+    const {
+      id,
+      transactionType,
+      amount,
+      status,
+      reason,
+      initiatingWallet,
+      created_at
+    } = transaction;
+    const { bank_code, bank_account_number, bank_account_name } = recipient;
+
+    const data: any = {};
+
+    data["transaction"] = {};
+    data["transaction"]["id"] = id;
+    data["transaction"]["transaction_type"] = transactionType;
+    data["transaction"]["amount"] = amount;
+    data["transaction"]["status"] = status;
+    data["transaction"]["beneficiary_name"] = bank_account_name;
+    data["transaction"]["beneficiary_bank"] = bank_code;
+    data["transaction"]["beneficiary_account"] = bank_account_number;
+    data["transaction"]["reason"] = reason || "";
+    data["transaction"]["created_at"] = created_at;
+
+    return data;
+  }
+
+  static tt2(s: any): any {
+    const { transaction, wallet } = s;
+
+    const {
+      id,
+      status,
+      transactionType,
+      amount,
+      initiator_name,
+      initiatingWallet,
+      created_at
+    } = transaction;
+    const { id: wallet_id, accountName } = wallet;
+
+    const data: any = {};
+
+    data["transaction"] = {};
+    data["transaction"]["id"] = id;
+    data["transaction"]["transaction_type"] = transactionType;
+    data["transaction"]["amount"] = amount;
+    data["transaction"]["to"] = accountName;
+    data["transaction"]["status"] = status;
+    data["transaction"]["created_at"] = created_at;
+
+    return data;
+  }
+
+  static tt3(s: any): any {
+    const { transaction } = s;
+    console.log(transaction);
+
+    const {
+      id,
+      status,
+      transactionType,
+      amount,
+      initiator_name,
+      initiatingWallet,
+      created_at,
+      channel,
+      authorizing_bank
+    } = transaction;
+
+    const data: any = {};
+
+    data["transaction"] = {};
+    data["transaction"]["id"] = id;
+    data["transaction"]["transaction_type"] = transactionType;
+    data["transaction"]["amount"] = amount;
+    data["transaction"]["to"] = initiatingWallet;
+    data["transaction"]["status"] = status;
+    data["transaction"]["authorizing_bank"] = authorizing_bank || "N/A";
+    data["transaction"]["payment_channel"] = channel || "N/A";
+    data["transaction"]["created_at"] = created_at;
+
+    return data;
   }
 }
 

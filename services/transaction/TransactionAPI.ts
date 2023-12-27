@@ -9,5 +9,6 @@ router.post("/transfer", TransactionController.transactionWallet2Wallet);
 router.post("/withdraw", TransactionController.transactionWallet2Other);
 
 router.get("/", TransactionController.getTransactionHistory);
+router.get("/:id", TransactionController.getTransaction);
 
 export default router;
