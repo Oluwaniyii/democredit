@@ -9,12 +9,13 @@ import {
 import { sequelize } from "../../../app/service-providers/sequelize";
 
 class Log extends Model<InferAttributes<Log>, InferCreationAttributes<Log>> {
-  declare id: number;
+  declare id: CreationOptional<number>;
   declare wallet_id: string;
   declare transaction_id: string;
   declare entry_type: string;
   declare amount: number;
   declare balance: number;
+  declare description: CreationOptional<string>;
   declare created_at: CreationOptional<string>;
 }
 
@@ -36,7 +37,8 @@ Log.init(
     entry_type: { type: DataTypes.STRING },
     amount: { type: DataTypes.NUMBER },
     balance: { type: DataTypes.NUMBER },
-    created_at: { type: DataTypes.STRING }
+    description: { type: DataTypes.STRING, defaultValue: "" },
+    created_at: { type: DataTypes.DATE }
   },
   {
     sequelize,

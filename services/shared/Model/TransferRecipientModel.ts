@@ -12,11 +12,11 @@ class TransferRecipient extends Model<
   InferAttributes<TransferRecipient>,
   InferCreationAttributes<TransferRecipient>
 > {
-  declare id: string;
-  declare bank_code: CreationOptional<string>;
-  declare bank_account_name: CreationOptional<string>;
-  declare bank_account_number: CreationOptional<string>;
-  declare ps_recipient_code: CreationOptional<string>;
+  declare id: CreationOptional<string>;
+  declare bank_code: string;
+  declare bank_account_name: string;
+  declare bank_account_number: string;
+  declare ps_recipient_code: string;
   declare created_at: CreationOptional<string>;
 }
 
@@ -36,7 +36,7 @@ TransferRecipient.init(
   {
     sequelize,
     modelName: "TransferRecipient",
-    tableName: "customer_default_recipient",
+    tableName: "transfer_recipient",
     createdAt: "created_at",
     updatedAt: false
   }
