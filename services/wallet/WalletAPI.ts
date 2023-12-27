@@ -1,9 +1,8 @@
 import { Router } from "express";
-import { createWallet, getWallet } from "./WalletController";
+import WalletController from "./WalletController";
 
 const router: Router = Router();
 
-router.post("/", createWallet);
-router.get("/:wallet_id", getWallet);
+router.get("/:wallet_id", WalletController.getWallet);
 
 export default router;

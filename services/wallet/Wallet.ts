@@ -58,14 +58,12 @@ class Wallet {
   }
 
   serialize() {
-    const dto = {
+    return {
       id: this.id,
       balance: this.balance,
       accountName: this.accountName,
       accountEmail: this.accountEmail
     };
-
-    return dto;
   }
 }
 
