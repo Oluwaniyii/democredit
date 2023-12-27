@@ -80,10 +80,19 @@ class TransactionFund extends Transaction {
 
   private async creditWallet() {
     const wallet: any = (
-      await this._walletService.deposit(this.initiatorWallet.getId(), this.amount)
+      await this._walletService.deposit(this.initiatorWallet.getId(), this.amount, this.id)
     )["wallet"];
 
     this.initiatorWallet = wallet;
+
+    await this._repository.writeLog(
+      this.initiatingWallet,
+      this.id,
+      this.amount,
+      "CREDIT",
+      this.initiatorWallet.getBalance(),
+      `wallet deposit from fund ${this.initiatorWallet.getAccountName()}`
+    );
   }
 
   public setWalletId(wallet_id: string) {

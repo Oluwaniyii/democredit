@@ -1,14 +1,9 @@
 import { Router } from "express";
-import {
-  initializeTransactionFund,
-  completeTransactionFund,
-  transactionWallet2Wallet
-} from "./TransactionController";
+import TransactionController from "./TransactionController";
 
 const router: Router = Router();
 
-router.post("/fund", initializeTransactionFund);
-router.post("/fund/complete", completeTransactionFund);
-router.post("/transfer", transactionWallet2Wallet);
+router.post("/fund", TransactionController.initializeTransactionFund);
+router.post("/fund/complete", TransactionController.completeTransactionFund);
 
 export default router;

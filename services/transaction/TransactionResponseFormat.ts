@@ -49,7 +49,7 @@ class TransactionResponseFormat {
     data["transaction"]["transaction_type"] = transactionType;
     data["transaction"]["amount"] = amount;
     data["transaction"]["status"] = status;
-    data["transaction"]["channel"] = channel;
+    data["transaction"]["payment_channel"] = channel;
     data["transaction"]["initiatingWallet"] = initiatingWallet;
     data["transaction"]["created_at"] = created_at;
 
