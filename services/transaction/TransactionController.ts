@@ -6,6 +6,7 @@ import PaystackService from "../PaystackService";
 import TransactionResponseFormat from "./TransactionResponseFormat";
 import TransactionWallet2Wallet from "./TransactionWallet2Wallet";
 import TransactionWallet2Other from "./TransactionWallet2Other";
+import TransactionViewMany from "./TransactionViewMany";
 
 const transactionRepository = new TransactionRepository();
 const walletService = new WalletService();
@@ -83,6 +84,20 @@ class TransactionController {
 
       const action = await transactionWallet2Other.init();
       return TransactionResponseFormat.wallet2other(res, action);
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  public static async getTransactionHistory(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { wallet_id } = res.locals.authenticated_user;
+
+      const transactionViewMany = new TransactionViewMany(transactionRepository);
+      transactionViewMany.setWalletId(wallet_id);
+
+      const action = await transactionViewMany.init();
+      return TransactionResponseFormat.getTransactionHistory(res, action);
     } catch (e) {
       next(e);
     }

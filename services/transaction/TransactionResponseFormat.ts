@@ -163,6 +163,51 @@ class TransactionResponseFormat {
 
     return res;
   }
+
+  public static getTransactionHistory(res: Response, actionData: any): Response {
+    const { transactions } = actionData;
+
+    const s = transactions.map((transaction: any) => {
+      const {
+        id,
+        wallet_id,
+        transaction_id,
+        entry_type,
+        amount,
+        balance,
+        description,
+        created_at
+      } = transaction;
+
+      return {
+        id,
+        // transaction_id,
+        entry_type,
+        amount,
+        description,
+        balance,
+        transaction_url: `/transactions/${transaction_id}`,
+        created_at
+      };
+    });
+
+    const response: any = {};
+    const statusCode = 200;
+    const success = true;
+    const message = "ok";
+    const data: any = {};
+
+    data["transactions"] = s;
+
+    response.success = success;
+    response.message = message;
+    response.data = data;
+
+    res.status(statusCode);
+    res.json(response);
+
+    return res;
+  }
 }
 
 export default TransactionResponseFormat;
