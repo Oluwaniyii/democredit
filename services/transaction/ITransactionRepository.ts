@@ -17,7 +17,7 @@ interface ITransactionRepository {
   getTransferRecipient(accountNumber: string, bankCode: string): Promise<any>;
   getTransferRecipientById(recipientId: string): Promise<any>;
 
-  getTransactionHistory(walletId: string): Promise<Array<any>>;
+  getTransactionHistory(walletId: string, limit: number, page: number): Promise<Array<any>>;
   getTransaction(transactionId: string): Promise<any>;
   getTransactionType(transactionId: string): Promise<string>;
 

@@ -93,9 +93,12 @@ class TransactionController {
   public static async getTransactionHistory(req: Request, res: Response, next: NextFunction) {
     try {
       const { wallet_id } = res.locals.authenticated_user;
+      const { limit, page } = req.query;
 
       const transactionViewMany = new TransactionViewMany(transactionRepository);
       transactionViewMany.setWalletId(wallet_id);
+      transactionViewMany.setLimit(limit);
+      transactionViewMany.setPage(page);
 
       const action = await transactionViewMany.init();
       return TransactionResponseFormat.getTransactionHistory(res, action);

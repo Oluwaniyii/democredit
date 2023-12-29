@@ -206,9 +206,20 @@ class TransactionRepository implements ITransactionRepository {
     };
   }
 
-  async getTransactionHistory(walletId: string): Promise<Array<any>> {
-    const transactions = await LogModel.findAll({ where: { wallet_id: walletId }, raw: true });
-    return transactions;
+  async getTransactionHistory(
+    walletId: string,
+    limit: number = 10,
+    page: number = 0
+  ): Promise<any> {
+    const totalCount = await LogModel.count({ where: { wallet_id: walletId } });
+    const transactions = await LogModel.findAll({
+      limit: limit,
+      offset: (page - 1) * limit,
+      where: { wallet_id: walletId },
+      raw: true
+    });
+
+    return { transactions: transactions, limit, page, totalCount };
   }
 
   async getTransactionType(transactionId: string): Promise<any> {

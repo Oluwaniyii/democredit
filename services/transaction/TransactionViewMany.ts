@@ -3,6 +3,8 @@ import { domainError } from "../domainError";
 
 class TransactionViewMany {
   private walletId: string;
+  private limit: number;
+  private page: number;
 
   private _repository: ITransactionRepository;
 
@@ -14,9 +16,22 @@ class TransactionViewMany {
     this.walletId = walletId;
   }
 
+  setLimit(limit: any = "10") {
+    this.limit = parseInt(limit);
+  }
+
+  setPage(page: any = "1") {
+    this.page = parseInt(page);
+  }
+
   async init(): Promise<any> {
-    const transactionHistory: any[] = await this._repository.getTransactionHistory(this.walletId);
-    return { transactions: transactionHistory };
+    const transactionHistoryData: any = await this._repository.getTransactionHistory(
+      this.walletId,
+      this.limit,
+      this.page
+    );
+
+    return transactionHistoryData;
   }
 }
 

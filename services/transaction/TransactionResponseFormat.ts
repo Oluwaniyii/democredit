@@ -165,9 +165,9 @@ class TransactionResponseFormat {
   }
 
   public static getTransactionHistory(res: Response, actionData: any): Response {
-    const { transactions } = actionData;
+    const { transactions, limit, page, totalCount } = actionData;
 
-    const s = transactions.map((transaction: any) => {
+    const transaction_list = transactions.map((transaction: any) => {
       const {
         id,
         wallet_id,
@@ -196,7 +196,18 @@ class TransactionResponseFormat {
     const message = "ok";
     const data: any = {};
 
-    data["transactions"] = s;
+    const PAGE_LINK = `/transactions?limit=${limit}&page=`;
+    const LAST_PAGE = Math.ceil(totalCount / limit);
+
+    data["pagination"] = {};
+    data["pagination"]["limit"] = limit;
+    data["pagination"]["page"] = page;
+    data["pagination"]["totalRows"] = totalCount;
+    data["pagination"]["next"] = page < LAST_PAGE ? `${PAGE_LINK}${page + 1}` : null;
+    data["pagination"]["prev"] = page > 1 ? `${PAGE_LINK}${page - 1}` : null;
+    data["pagination"]["last"] = `${PAGE_LINK}${LAST_PAGE}`;
+    data["pagination"]["first"] = `${PAGE_LINK}1`;
+    data["transactions"] = transaction_list;
 
     response.success = success;
     response.message = message;
