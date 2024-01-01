@@ -17,7 +17,6 @@ class Transaction extends Model<
   declare amount: CreationOptional<number>;
   declare status: CreationOptional<string>;
   declare initiating_wallet: CreationOptional<string>;
-  declare transaction_statement_id: CreationOptional<number>;
   declare created_at: CreationOptional<string>;
   declare updated_at: CreationOptional<string>;
 }
@@ -40,7 +39,6 @@ Transaction.init(
       defaultValue: "PENDING"
     },
     initiating_wallet: { type: DataTypes.STRING },
-    transaction_statement_id: { type: DataTypes.NUMBER },
     created_at: { type: DataTypes.DATE },
     updated_at: { type: DataTypes.DATE }
   },

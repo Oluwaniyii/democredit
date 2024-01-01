@@ -16,6 +16,7 @@ class TransferRecipient extends Model<
   declare bank_code: string;
   declare bank_account_name: string;
   declare bank_account_number: string;
+  declare bank_name: CreationOptional<string>;
   declare ps_recipient_code: string;
   declare created_at: CreationOptional<string>;
 }
@@ -30,6 +31,7 @@ TransferRecipient.init(
     bank_code: { type: DataTypes.STRING },
     bank_account_name: { type: DataTypes.STRING },
     bank_account_number: { type: DataTypes.STRING },
+    bank_name: { type: DataTypes.STRING, allowNull: true },
     ps_recipient_code: { type: DataTypes.STRING },
     created_at: { type: DataTypes.DATE }
   },

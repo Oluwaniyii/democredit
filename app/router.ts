@@ -18,13 +18,8 @@ router.get("/pg/transaction/fund", (req: Request, res: Response) => {
   res.render("payment");
 });
 
-//
-router.get("/", AuthProtectionMiddleware, function(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
-  res.json(res.locals.authenticated_user);
+router.get("/", function(req: Request, res: Response, next: NextFunction) {
+  res.send("Welcome to Democredit API");
 });
 
 router.get("/error", function(req: Request, res: Response, next: NextFunction) {
