@@ -38,18 +38,6 @@ class Application {
     this._server.use(cookieParser());
     this._server.use(cors());
 
-    // auth
-    this._server.use(function(req, res, next) {
-      res.locals.authenticated_user = {
-        // custom credentials for now
-        id: "c0dcbe60-dd6a-4bf6-821f-20a0f39e331f",
-        name: "John Doe",
-        email: "john@gmail.com",
-        wallet_id: "73ace0d7-c9e5-4ce2-b63b-343478a727c2"
-      };
-      next();
-    });
-
     this._server.use(router);
 
     // Error handling
