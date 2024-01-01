@@ -173,7 +173,6 @@ Class TransactionFund {
       accountEmail: 'john@gmail.com'
     }
   },
-  userId: undefined,
   userEmail: 'john@gmail.com'
 }
  */

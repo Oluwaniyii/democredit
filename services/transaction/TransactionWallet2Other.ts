@@ -8,6 +8,7 @@ import { domainError } from "../domainError";
 class TransactionWallet2Other extends Transaction {
   private userId: string;
   private bankCode: string;
+  private bankName: string;
   private accountNumber: string;
   private accountName: string;
   private recipientId: number;
@@ -70,15 +71,19 @@ class TransactionWallet2Other extends Transaction {
 
     if (!account_name) throw new Error("invalid recipient provided");
 
-    const { recipient_code, details } = await this._paystackService.createTransferRecepient(
+    const recipientData = await this._paystackService.createTransferRecepient(
       this.bankCode,
       this.accountNumber,
       this.accountName
     );
+
+    const { recipient_code, details } = recipientData;
     this.recipientCode = recipient_code;
+    this.bankName = details.bank_name;
 
     const { id: recipientId } = await this._repository.createTransferRecipient({
       bankCode: this.bankCode,
+      bankName: this.bankName,
       bankAccountNumber: this.accountNumber,
       bankAccountName: this.accountName,
       PSRecipientCode: this.recipientCode
@@ -95,10 +100,18 @@ class TransactionWallet2Other extends Transaction {
         "No default recipient associated with your account, please provide a recipient for withdrawal"
       );
 
-    const { ps_recipient_code, bank_account_number, bank_account_name, bank_code } = recipientData;
+    const {
+      ps_recipient_code,
+      bank_account_number,
+      bank_account_name,
+      bank_code,
+      bank_name
+    } = recipientData;
     this.recipientCode = ps_recipient_code;
-    this.accountName = bank_account_number;
+    this.accountName = bank_account_name;
+    this.accountNumber = bank_account_number;
     this.bankCode = bank_code;
+    this.bankName = bank_name;
   }
 
   async setup_recipient() {
@@ -114,10 +127,12 @@ class TransactionWallet2Other extends Transaction {
       bank_account_number,
       bank_code,
       ps_recipient_code,
-      bank_account_name
+      bank_account_name,
+      bank_name
     } = recipientData;
     this.recipientCode = ps_recipient_code;
     this.bankCode = bank_code;
+    this.bankName = bank_name;
     this.accountName = bank_account_name;
     this.accountNumber = bank_account_number;
     this.recipientId = id;
@@ -156,7 +171,7 @@ class TransactionWallet2Other extends Transaction {
       this.amount,
       "DEBIT",
       this.initiatorWallet.getBalance(),
-      `bank transfer to ${this.accountName} ${this.accountNumber}`
+      `bank transfer to ${this.accountName} ${this.accountNumber} ${this.bankName} ${this.accountNumber}`
     );
   }
 
@@ -194,6 +209,8 @@ class TransactionWallet2Other extends Transaction {
 
     await this._repository.updateTransactionWallet2Other(this.serialize());
 
+    console.log(this);
+
     return {
       transaction: this.serialize(),
       wallet: this.initiatorWallet
@@ -216,3 +233,33 @@ class TransactionWallet2Other extends Transaction {
 }
 
 export default TransactionWallet2Other;
+
+/*
+TransactionWallet2Other {
+  id: '8a55ac64-7069-4c07-a91e-2d1c76600b54',
+  transactionType: 'WITHDRAW',
+  amount: 50,
+  status: 'SUCCESS',
+  initiatingWallet: '4ef28a3d-2fe0-489e-bd7f-dc820509d075',
+  created_at: 2024-01-01T17:32:28.240Z,
+  userId: '26e7af11-c572-4071-836f-808b7ed453f2',
+  bankCode: '058',
+  bankName: 'Guaranty Trust Bank',
+  accountNumber: '0423703103',
+  accountName: 'AYODELE OLUWANIYI BENJAMIN',
+  recipientId: 3,
+  recipientCode: 'RCP_uqdpl154d4cv7gz',
+  reason: undefined,
+  initiatorWallet: Wallet {
+    id: '4ef28a3d-2fe0-489e-bd7f-dc820509d075',
+    balance: 5260,
+    accountName: 'Tee Johnson',
+    accountEmail: 'teejohnson@gmail.com'
+  },
+  _repository: TransactionRepository {
+    getDefinedFields: [Function: getDefinedFields]
+  },
+  _walletService: WalletService {},
+  _paystackService: PaystackService {}
+}
+*/

@@ -109,10 +109,11 @@ class TransactionRepository implements ITransactionRepository {
   }
 
   async createTransferRecipient(fields: any): Promise<any> {
-    const { bankCode, bankAccountNumber, bankAccountName, PSRecipientCode } = fields;
+    const { bankCode, bankAccountNumber, bankAccountName, PSRecipientCode, bankName } = fields;
 
     const recipient = await TransferRecipientModel.create({
       bank_code: bankCode,
+      bank_name: bankName,
       bank_account_number: bankAccountNumber,
       bank_account_name: bankAccountName,
       ps_recipient_code: PSRecipientCode
@@ -135,6 +136,7 @@ class TransactionRepository implements ITransactionRepository {
     const {
       id,
       bank_code,
+      bank_name,
       bank_account_number,
       bank_account_name,
       ps_recipient_code,
@@ -164,6 +166,7 @@ class TransactionRepository implements ITransactionRepository {
     const {
       id,
       bank_code,
+      bank_name,
       bank_account_number,
       bank_account_name,
       ps_recipient_code,
@@ -190,6 +193,7 @@ class TransactionRepository implements ITransactionRepository {
     const {
       id,
       bank_code,
+      bank_name,
       bank_account_number,
       bank_account_name,
       ps_recipient_code,
