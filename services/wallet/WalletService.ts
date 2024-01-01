@@ -3,10 +3,9 @@ import WalletView from "./WalletView";
 import WalletDeposit from "./WalletDeposit";
 import WalletWithdraw from "./WalletWithdraw";
 import WalletRepository from "./WalletRepository";
-import KnexWalletRepository from "./KnexWalletRepository";
 import WalletCreate from "./WalletCreate";
 
-const walletRepository = new KnexWalletRepository();
+const walletRepository = new WalletRepository();
 
 class WalletEntry implements IWalletService {
   constructor() {}
@@ -27,15 +26,21 @@ class WalletEntry implements IWalletService {
     return action;
   }
 
-  async deposit(walletId: string, amount: number): Promise<any> {
-    const walletDeposit = new WalletDeposit(walletRepository);
-    const action = await walletDeposit.init(walletId, amount);
+  async getUserWallet(userId: string): Promise<any> {
+    const walletView = new WalletView(walletRepository);
+    const action = await walletView.getUserWallet(userId);
     return action;
   }
 
-  async withdraw(walletId: string, amount: number): Promise<any> {
+  async deposit(walletId: string, amount: number, transactionId: string): Promise<any> {
+    const walletDeposit = new WalletDeposit(walletRepository);
+    const action = await walletDeposit.init(walletId, amount, transactionId);
+    return action;
+  }
+
+  async withdraw(walletId: string, amount: number, transactionId: string): Promise<any> {
     const walletWithdraw = new WalletWithdraw(walletRepository);
-    const action = await walletWithdraw.init(walletId, amount);
+    const action = await walletWithdraw.init(walletId, amount, transactionId);
     return action;
   }
 }

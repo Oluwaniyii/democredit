@@ -5,7 +5,7 @@ import IWalletService from "../wallet/IWalletService";
 import IPaystackService from "../IPaystackService";
 import AppException from "../AppException";
 import { domainError } from "../domainError";
-// import Wallet from "../../services/wallet/Wallet";
+import Wallet from "../../services/wallet/Wallet";
 
 enum TransactionType {
   "FUND",
@@ -20,15 +20,15 @@ enum Channel {
 
 class TransactionFund extends Transaction {
   private channel: string | null;
-  private authorizing_bank: string | null; // optional
+  private authorizing_bank: string | null;
+  private userId: string;
+  private userEmail: string;
+
+  private initiatorWallet: any;
 
   private _repository: ITransactionRepository;
   private _walletService: IWalletService;
   private _paystackService: IPaystackService;
-
-  private initiatorWallet: any;
-  private userId: string;
-  private userEmail: string;
 
   constructor(
     transactionRepository: ITransactionRepository,
@@ -41,15 +41,12 @@ class TransactionFund extends Transaction {
     this._walletService = walletService;
     this._paystackService = paystackService;
     this.transactionType = "FUND";
-    this.initiator_bank = "democredit";
   }
 
   private async createTransaction() {
-    const transaction = await this._repository.createTransaction({
-      transaction_type: this.transactionType,
-      initiator_name: this.initiator_name,
-      initiator_bank: this.initiator_bank,
-      initiator_account: this.initiator_account
+    const transaction = await this._repository.createTransactionFund({
+      transactionType: this.transactionType,
+      initiatingWallet: this.initiatingWallet
     });
 
     const { id: transactionId, status } = transaction;
@@ -59,40 +56,47 @@ class TransactionFund extends Transaction {
   }
 
   private async getTransaction() {
-    const transaction = await this._repository.getTransaction(this.id);
+    const transaction = await this._repository.getTransactionFund(this.id);
 
     if (!transaction) throw new AppException(domainError.INVALID_TRANSACTION_REFERENCE);
+    if (transaction.status === "SUCCESS") throw new AppException(domainError.DUPLICATE_TRANSACTION);
 
     this.id = transaction.id;
-    this.transactionType = transaction.transaction_type;
+    this.transactionType = transaction.transactionType;
     this.amount = transaction.amount;
     this.status = transaction.status;
-    this.initiator_name = transaction.initiator_name;
-    this.initiator_bank = transaction.initiator_bank;
-    this.initiator_account = transaction.initiator_account;
+    this.initiatingWallet = transaction.initiatingWallet;
     this.created_at = transaction.created_at;
   }
 
   private async getWallet() {
-    const initiatorWallet: any = (await this._walletService.getWallet(this.initiator_account))[
+    const initiatorWallet: any = (await this._walletService.getWallet(this.initiatingWallet))[
       "wallet"
     ];
 
     this.initiatorWallet = initiatorWallet;
-    this.initiator_name = initiatorWallet.accountName;
     this.userEmail = initiatorWallet.accountEmail;
   }
 
   private async creditWallet() {
     const wallet: any = (
-      await this._walletService.deposit(this.initiatorWallet.getId(), this.amount)
+      await this._walletService.deposit(this.initiatorWallet.getId(), this.amount, this.id)
     )["wallet"];
 
     this.initiatorWallet = wallet;
+
+    await this._repository.writeLog(
+      this.initiatingWallet,
+      this.id,
+      this.amount,
+      "CREDIT",
+      this.initiatorWallet.getBalance(),
+      `wallet deposit from fund ${this.initiatorWallet.getAccountName()}`
+    );
   }
 
   public setWalletId(wallet_id: string) {
-    this.initiator_account = wallet_id;
+    this.initiatingWallet = wallet_id;
   }
 
   public setTransactionId(transaction_id: string) {
@@ -120,13 +124,13 @@ class TransactionFund extends Transaction {
     const { status, amount, channel, authorization } = PSTransactionDetails;
 
     this.status = status;
-    this.amount = amount / 100; // paystack logic requires you to multiply actual amount by 10 on payment
+    this.amount = amount / 100; // paystack logic requires you to multiply actual amount by 100 on payment
     this.channel = channel;
     this.authorizing_bank = authorization.bank;
 
     if (status === "success") await this.creditWallet();
 
-    await this._repository.updateTransaction(this.serialize());
+    await this._repository.updateTransactionFund(this.serialize());
     return { transaction: this.serialize(), wallet: this.initiatorWallet };
   }
 
@@ -136,12 +140,10 @@ class TransactionFund extends Transaction {
       transactionType: this.transactionType,
       amount: this.amount,
       status: this.status,
-      initiator_name: this.initiator_name,
-      initiator_bank: this.initiator_bank,
-      initiator_account: this.initiator_account,
-      created_at: this.created_at,
+      initiatingWallet: this.initiatingWallet,
       channel: this.channel,
-      authorizing_bank: this.authorizing_bank
+      authorizing_bank: this.authorizing_bank,
+      created_at: this.created_at
     };
   }
 }
@@ -156,7 +158,7 @@ Class TransactionFund {
   status: 'success',
   initiator_name: 'John Doe',
   initiator_bank: 'Democredit',
-  initiator_account: '0a477123-7935-4ca2-a884-a1fc99831f21',
+  initiatingWallet: '0a477123-7935-4ca2-a884-a1fc99831f21',
   created_at: 2023-06-15T12:08:49.000Z,
   channel: 'card',
   authorizing_bank: 'TEST BANK',

@@ -12,7 +12,6 @@ class Wallet extends Model<InferAttributes<Wallet>, InferCreationAttributes<Wall
   declare id: CreationOptional<string>;
   declare user_id: string;
   declare balance: CreationOptional<number>;
-  declare created_at: CreationOptional<string>;
   declare updated_at: CreationOptional<string>;
 }
 
@@ -31,9 +30,6 @@ Wallet.init(
       type: DataTypes.NUMBER,
       defaultValue: 0
     },
-    created_at: {
-      type: DataTypes.DATE
-    },
     updated_at: {
       type: DataTypes.DATE
     }
@@ -42,7 +38,7 @@ Wallet.init(
     sequelize,
     modelName: "wallet",
     tableName: "wallet",
-    createdAt: "created_at",
+    createdAt: false,
     updatedAt: "updated_at"
   }
 );

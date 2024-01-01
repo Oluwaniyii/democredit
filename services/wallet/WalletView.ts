@@ -21,6 +21,13 @@ class WalletView {
 
     return { wallet };
   }
+
+  async getUserWallet(userId: string) {
+    const wallet: Wallet | null = await this._repository.getUserWallet(userId);
+    if (!wallet) return null;
+
+    return { wallet };
+  }
 }
 
 export default WalletView;

@@ -2,22 +2,22 @@ import AppException from "../AppException";
 import IAccountRepository from "./IAccountRepository";
 import Account from "./Account";
 import { domainError } from "../domainError";
-
-type AccountRegisterReturnValue = {
-  account: Account;
-};
+import IWalletService from "../wallet/IWalletService";
 
 class AccountRegister {
-  private _repository: IAccountRepository;
-  private _bcrypt: any;
   private name: string;
   private email: string;
   private phone: string;
   private password: string;
 
-  constructor(AccountRepository: IAccountRepository, Bcrypt: any) {
+  private _repository: IAccountRepository;
+  private _bcrypt: any;
+  private _walletService: IWalletService;
+
+  constructor(AccountRepository: IAccountRepository, Bcrypt: any, walletService: IWalletService) {
     this._repository = AccountRepository;
     this._bcrypt = Bcrypt;
+    this._walletService = walletService;
   }
 
   cleanPhoneNumber(phone: string): string {
@@ -43,9 +43,8 @@ class AccountRegister {
     this.password = password;
   }
 
-  async init(): Promise<AccountRegisterReturnValue> {
+  async init(): Promise<any> {
     const isEmailTaken = await this._repository.emailExists(this.email);
-
     if (isEmailTaken)
       throw new AppException(
         domainError.UNAVAILABLE_EMAIL_ADDRESS,
@@ -53,15 +52,15 @@ class AccountRegister {
       );
 
     const hashedPassword: string = await this._bcrypt.hash(this.password, 10);
-
     const account: Account = await this._repository.createAccount(
       this.name,
       this.email,
       this.phone,
       hashedPassword
     );
+    const wallet: any = (await this._walletService.createWallet(account.getId()))["wallet"];
 
-    return { account };
+    return { account, wallet };
   }
 }
 

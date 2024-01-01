@@ -9,8 +9,8 @@ class WalletWithdraw {
     this._repository = walletRepository;
   }
 
-  async init(wallet_id: string, amount: number) {
-    const wallet = await this._repository.getWallet(wallet_id);
+  async init(walletId: string, amount: number, transactionId: string) {
+    const wallet = await this._repository.getWallet(walletId);
 
     this.wallet = wallet;
     this.wallet.withdraw(amount);

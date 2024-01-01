@@ -15,24 +15,6 @@ export type TypeDomainError = {
 };
 
 export const domainError = {
-  INVALID_CREDENTIALS: {
-    errorCode: 1101,
-    statusCode: 401,
-    message: "invalid credentials"
-  },
-
-  INVALID_RESFRESH_TOKEN: {
-    errorCode: 1102,
-    statusCode: 401,
-    message: "invalid refresh token"
-  },
-
-  UNAVAILABLE_EMAIL_ADDRESS: {
-    errorCode: 1103,
-    statusCode: 400,
-    message: "email is not available"
-  },
-
   NOT_FOUND: {
     errorCode: 1001,
     statusCode: 400,
@@ -51,6 +33,24 @@ export const domainError = {
     message: "invalid or missing header"
   },
 
+  INVALID_CREDENTIALS: {
+    errorCode: 1101,
+    statusCode: 401,
+    message: "invalid credentials"
+  },
+
+  INVALID_RESFRESH_TOKEN: {
+    errorCode: 1102,
+    statusCode: 401,
+    message: "invalid refresh token"
+  },
+
+  UNAVAILABLE_EMAIL_ADDRESS: {
+    errorCode: 1103,
+    statusCode: 400,
+    message: "email is not available"
+  },
+
   INVALID_TRANSACTION_REFERENCE: {
     errorCode: 1301,
     statusCode: 400,
@@ -61,6 +61,12 @@ export const domainError = {
     errorCode: 1302,
     statusCode: 400,
     message: "could not complete transaction at this time"
+  },
+
+  DUPLICATE_TRANSACTION: {
+    errorCode: 1303,
+    statusCode: 400,
+    message: "duplicate transaction"
   },
 
   INVALID_WALLET_ID: {
