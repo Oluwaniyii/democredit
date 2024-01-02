@@ -8,6 +8,7 @@ import TransactionWallet2Wallet from "./TransactionWallet2Wallet";
 import TransactionWallet2Other from "./TransactionWallet2Other";
 import TransactionViewMany from "./TransactionViewMany";
 import TransactionView from "./TransactionView";
+import TransactionValidation from "./TransactionValidation";
 
 const transactionRepository = new TransactionRepository();
 const walletService = new WalletService();
@@ -32,13 +33,15 @@ class TransactionController {
 
   public static async completeTransactionFund(req: Request, res: Response, next: NextFunction) {
     try {
-      const { ref: transaction_reference } = req.body;
+      const { ref: transaction_reference } = await TransactionValidation.completeFund(req.body);
+
       const transactionFund = new TransactionFund(
         transactionRepository,
         walletService,
         paystackService
       );
       transactionFund.setTransactionId(transaction_reference.replace("tr_", ""));
+
       const action = await transactionFund.completeFund();
       return TransactionResponseFormat.completeFund(res, action);
     } catch (e) {
@@ -49,7 +52,7 @@ class TransactionController {
   public static async transactionWallet2Wallet(req: Request, res: Response, next: NextFunction) {
     try {
       const { wallet_id } = res.locals.authenticated_user;
-      const { receiver_wallet_id, amount } = req.body;
+      const { receiver_wallet_id, amount } = await TransactionValidation.wallet2Wallet(req.body);
 
       const transactionWallet2Wallet = new TransactionWallet2Wallet(
         transactionRepository,
@@ -69,7 +72,9 @@ class TransactionController {
   public static async transactionWallet2Other(req: Request, res: Response, next: NextFunction) {
     try {
       const { wallet_id, id } = res.locals.authenticated_user;
-      const { amount, bank_code, account_number } = req.body;
+      const { amount, bank_code, account_number } = await TransactionValidation.wallet2Other(
+        req.body
+      );
 
       const transactionWallet2Other = new TransactionWallet2Other(
         transactionRepository,
