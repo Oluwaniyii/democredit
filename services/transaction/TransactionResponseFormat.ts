@@ -302,7 +302,6 @@ class TransactionResponseFormat {
 
   static tt3(s: any): any {
     const { transaction } = s;
-    console.log(transaction);
 
     const {
       id,

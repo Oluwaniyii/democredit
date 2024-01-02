@@ -80,6 +80,9 @@ class TransactionWallet2Wallet extends Transaction {
   }
 
   public async initialize() {
+    if (this.initiatingWallet === this.receivingWallet)
+      throw new AppException(domainError.SELF_TRANSFER);
+
     await this.getInitiatorWallet();
     await this.getReceiverWallet();
 

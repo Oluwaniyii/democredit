@@ -86,5 +86,11 @@ export const domainError = {
     statusCode: 400,
     message:
       "could not withdraw from wallet, this could be a result of invalid amount or insufficient funds"
+  },
+
+  SELF_TRANSFER: {
+    errorCode: 1405,
+    statusCode: 400,
+    message: "you cannot transfer to yourself!"
   }
 };
