@@ -11,8 +11,8 @@ router.post("/fund/complete", TransactionController.completeTransactionFund);
 router.post("/transfer", AuthProtectionMiddleware, TransactionController.transactionWallet2Wallet);
 router.post("/withdraw", AuthProtectionMiddleware, TransactionController.transactionWallet2Other);
 
-router.get("/", TransactionController.getTransactionHistory);
-router.get("/:id", TransactionController.getTransaction);
+router.get("/", AuthProtectionMiddleware, TransactionController.getTransactionHistory);
+router.get("/:id", AuthProtectionMiddleware, TransactionController.getTransaction);
 
 async function AuthProtectionMiddleware(req: Request, res: Response, next: NextFunction) {
   try {

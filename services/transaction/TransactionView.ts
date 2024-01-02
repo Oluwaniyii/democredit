@@ -1,6 +1,7 @@
 import ITransactionRepository from "./ITransactionRepository";
-import { domainError } from "../domainError";
 import IWalletService from "../wallet/IWalletService";
+import AppException from "../../services/AppException";
+import { domainError } from "../domainError";
 
 class TransactionView {
   private transactionId: string;
@@ -19,6 +20,11 @@ class TransactionView {
 
   async init(): Promise<any> {
     const transactionType = await this._repository.getTransactionType(this.transactionId);
+    if (!transactionType)
+      throw new AppException(
+        domainError.NOT_FOUND,
+        `transaction with id ${this.transactionId} not found`
+      );
 
     if (transactionType === "WITHDRAW") {
       const transaction: any = await this._repository.getTransactionWallet2Other(
