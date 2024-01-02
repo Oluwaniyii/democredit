@@ -46,14 +46,14 @@ class AccountLogin {
     const issued_at = new Date().getTime();
     const expire_in = 86400000;
 
-    const payload = {
+    const data = {
       id: this.account.getId(),
       name: this.account.getName(),
       email: this.account.getEmail(),
-      wallet_id: this.wallet.id,
-      issued_at,
-      expire_in
+      wallet_id: this.wallet.id
     };
+
+    const payload = { data, issued_at, expire_in };
     const jwt_token = await JWT.sign(payload);
 
     return {

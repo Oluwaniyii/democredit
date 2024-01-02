@@ -5,6 +5,7 @@
 An eWallet system Integrated with Paystack Payment Service
 
 !["Oluwaniyii Portfolio landing page .png"](./_readme/democredit_paystack_dash.png)
+!["Oluwaniyii Portfolio landing page .png"](./_readme/db_model.png)
 
 This project incorporates my API development skills, practices, and methodology that I've established over the years into a beginner-friendly project that may be beneficial to other developers
 

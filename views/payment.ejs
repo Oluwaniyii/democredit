@@ -64,13 +64,17 @@
         </script>
 
         <script src="https://js.paystack.co/v1/inline.js"></script>
-
         <script>
+
+            const PAYSTACK_PUBLIC_KEY = "<%= paystackPublic %>";
+            const HOME_URL = "<%= homeUrl %>";
+
+
             function payWithPaystack(e) {
                 e.preventDefault();
 
                 const handler = PaystackPop.setup({
-                    key: 'pk_test_1a5419f89bb313dbe3677571f8b77585a8e0053a', //#################
+                    key: PAYSTACK_PUBLIC_KEY,
                     email: document.getElementById('email-address').value,
                     amount: document.getElementById('amount').value * 100,
                     currency: 'NGN',
@@ -79,8 +83,7 @@
                         console.log("____complete transaction____");
 
                         fetch(
-                            "http://localhost:3000/transactions/fund/complete", //#################
-
+                            `${HOME_URL}/transactions/fund/complete`,
                             {
                                 method: "POST",
                                 headers: {

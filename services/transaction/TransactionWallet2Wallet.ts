@@ -116,3 +116,31 @@ class TransactionWallet2Wallet extends Transaction {
 }
 
 export default TransactionWallet2Wallet;
+
+/*
+TransactionWallet2Wallet {
+  id: 'b2544e70-58ea-4e7e-8931-60e64337b5c2',
+  transactionType: 'TRANSFER',
+  amount: 30,
+  status: 'SUCCESS',
+  initiatingWallet: '4ef28a3d-2fe0-489e-bd7f-dc820509d075',
+  created_at: 2024-01-01T17:05:30.894Z,
+  receivingWallet: '4ef28a3d-2fe0-489e-bd7f-dc820509d075',
+  initiatorWallet: Wallet {
+    id: '4ef28a3d-2fe0-489e-bd7f-dc820509d075',
+    balance: 5240,
+    accountName: 'Tee Johnson',
+    accountEmail: 'teejohnson@gmail.com'
+  },
+  receiverWallet: Wallet {
+    id: '4ef28a3d-2fe0-489e-bd7f-dc820509d075',
+    balance: 5300,
+    accountName: 'Tee Johnson',
+    accountEmail: 'teejohnson@gmail.com'
+  },
+  _repository: TransactionRepository {
+    getDefinedFields: [Function: getDefinedFields]
+  },
+  _walletService: WalletService {}
+}
+*/

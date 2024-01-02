@@ -7,7 +7,7 @@ import WalletCreate from "./WalletCreate";
 
 const walletRepository = new WalletRepository();
 
-class WalletEntry implements IWalletService {
+class WalletService implements IWalletService {
   constructor() {}
   /**
    * @description
@@ -45,4 +45,4 @@ class WalletEntry implements IWalletService {
   }
 }
 
-export default WalletEntry;
+export default WalletService;
