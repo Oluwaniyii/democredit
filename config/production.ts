@@ -5,8 +5,10 @@ export default {
   app: {
     host: process.env.HOST || "localhost",
     port: process.env.PORT || 3000,
-    baseURL: `${process.env.PROTOCOL || "http"}://${process.env.HOST || "localhost"}:${process.env
-      .PORT || 3000}`,
+    baseURL:
+      process.env.HOME_URL ||
+      `${process.env.PROTOCOL || "http"}://${process.env.HOST || "localhost"}:${process.env.PORT ||
+        3000}`,
     logging: {
       file: true
     }
