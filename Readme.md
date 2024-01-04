@@ -64,9 +64,13 @@ The style and architecture of this project are explained on the [conventions](./
 
 - Head down to <a href="https://dashboard.paystack.com/#/login">Paystack Developer</a>, create an account, obtain your secret and public key and fill them in
 
+- `HOME_URL` should point to your host's base url or localhost:<port> if on development. This is important
+
 ```
 NODE_ENV=development
 PORT=3000
+HOST=
+HOME_URL=
 MYSQL_HOST=
 MYSQL_PORT=
 MYSQL_USER=
