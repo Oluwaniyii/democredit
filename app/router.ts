@@ -17,7 +17,7 @@ router.use("/support", SupportAPI);
 
 router.get("/pg/transaction/fund", (req: Request, res: Response) => {
   res.render("payment", {
-    homeUrl: "http://localhost:3000",
+    homeUrl: config.get("app.baseURL"),
     paystackSecret: config.get("paystack.secret"),
     paystackPublic: config.get("paystack.public")
   });
