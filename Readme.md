@@ -94,11 +94,8 @@ There are two options You can either choose to migrate only the database structu
 <b>Migrate Structure and Data</b>
 
 - Open up a new query tab on your workbench
-- run query `CREATE DATABASE democredit` or replace democredit with any name you want
 - Copy the content of `mysql/db_dump.sql`
 - Paste and run the query
-- Be sure to prefix the query with `USE democredit;` or your chosen db name
-
   !["workbench db connection"](./_readme/db_data_dump_query.png)
 
 <br/>

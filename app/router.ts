@@ -15,9 +15,6 @@ router.use("/wallets", WalletAPI);
 router.use("/transactions", TransactionAPI);
 router.use("/support", SupportAPI);
 
-console.log(config.get("paystack.secret"));
-console.log(config.get("paystack.public"));
-
 router.get("/pg/transaction/fund", (req: Request, res: Response) => {
   res.render("payment", {
     homeUrl: "http://localhost:3000",
