@@ -2,7 +2,7 @@
 
 # Democredit
 
-An eWallet system Integrated with Paystack Payment Service
+An eWallet system API Integrated with Paystack Payment Service
 
 [Test API On Swagger](https://app.swaggerhub.com/apis-docs/AYODELEYNIYII/demo-credit/1.0.0#/default/home) <br/>
 [See Markdown Documentation](./swagger.md)
