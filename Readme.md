@@ -4,6 +4,9 @@
 
 An eWallet system Integrated with Paystack Payment Service
 
+[Test API On Swagger](https://app.swaggerhub.com/apis-docs/AYODELEYNIYII/demo-credit/1.0.0#/default/home) <br/>
+[See Markdown Documentation](./swagger.md)
+
 !["Oluwaniyii Portfolio landing page .png"](./_readme/democredit_paystack_dash.png)
 !["Oluwaniyii Portfolio landing page .png"](./_readme/db_model.png)
 !["Oluwaniyii Portfolio landing page .png"](./_readme/swagger_test.png)
