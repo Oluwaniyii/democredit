@@ -17,7 +17,7 @@ This project incorporates my API development skills, practices, and methodology
 
 - Node Js (Express)
 - Mysql(Sequelize)
-- Docker
+- Typescript
 - Paystack
 
 ### Features
