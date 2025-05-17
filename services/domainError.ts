@@ -78,7 +78,7 @@ export const domainError = {
   WALLET_DEPOSIT_ERROR: {
     errorCode: 1402,
     statusCode: 400,
-    message: "could not deposit to wallet, input a valid amount"
+    message: "could not deposit to wallet, provide a valid amount"
   },
 
   WALLET_WITHDRAW_ERROR: {

@@ -101,6 +101,30 @@ class AccountResponseFormat {
 
     return res;
   }
+
+  public static getAccountAllInfo(res: Response, accounts: any): Response {
+    const account_list = accounts.map((account: any) => {
+      const { account_id, account_name, account_email, wallet_id, wallet_balance } = account;
+      return { account_id, account_name, account_email, wallet_id, wallet_balance };
+    });
+
+    const response: any = {};
+    const statusCode = 200;
+    const success = true;
+    const message = "ok";
+    const data: any = {};
+
+    data["accounts"] = account_list;
+
+    response.success = success;
+    response.message = message;
+    response.data = data;
+
+    res.status(statusCode);
+    res.json(response);
+
+    return res;
+  }
 }
 
 export default AccountResponseFormat;

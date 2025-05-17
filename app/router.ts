@@ -11,7 +11,7 @@ import config from "config";
 const router = require("express").Router();
 
 router.use("/accounts", AccountAPI);
-router.use("/wallets", WalletAPI);
+router.use("/wallet", WalletAPI);
 router.use("/transactions", TransactionAPI);
 router.use("/support", SupportAPI);
 

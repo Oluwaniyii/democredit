@@ -6,7 +6,7 @@ import sinon from "sinon";
 
 import TransactionFund from "../../../services/transaction/TransactionFund";
 import TransactionRepository from "../../../services/transaction/KnexTransactionRepository";
-import WalletService from "../../../services/wallet/WalletEntry";
+import WalletService from "../../../services/wallet/WalletService";
 import PaystackService from "../../../services/PaystackService";
 
 import Wallet from "../../../services/wallet/Wallet";
@@ -57,7 +57,7 @@ describe("TransactionFund", function() {
           status,
           initiator_bank,
           initiator_name,
-          initiator_account
+          initiatingWallet
         }) {
           const transaction = new Transaction();
 
@@ -67,7 +67,7 @@ describe("TransactionFund", function() {
           transaction.status = status;
           transaction.initiator_name = initiator_name;
           transaction.initiator_bank = initiator_bank;
-          transaction.initiator_account = initiator_account;
+          transaction.initiatingWallet = initiatingWallet;
           transaction.created_at = new Date().toISOString();
 
           return Promise.resolve(transaction);
@@ -80,7 +80,7 @@ describe("TransactionFund", function() {
       sinon.assert.calledOnceWithMatch(createTransaction, {
         transaction_type: "FUND",
         initiator_name: walletData.name,
-        initiator_account: walletData.id
+        initiatingWallet: walletData.id
       });
       expect(action).to.have.property("paymentLink", PotentialPaymentLink);
 
@@ -125,7 +125,7 @@ describe("TransactionFund", function() {
           amount: undefined,
           initiator_name: "Oluwaniyii Ayodele",
           initiator_bank: "democredit",
-          initiator_account: "e327df07-db8e-455c-8d37-01cef7d56ade",
+          initiatingWallet: "e327df07-db8e-455c-8d37-01cef7d56ade",
           created_at: new Date().toISOString()
         };
         const walletData = {
@@ -173,8 +173,6 @@ describe("TransactionFund", function() {
           status: FakePaystackVeificationResponse.success.data.status
         });
 
-        // console.log(action);
-
         getTransaction.restore();
         updateTransaction.restore();
         verifyTransaction.restore();
@@ -210,7 +208,7 @@ describe("TransactionFund", function() {
           amount: undefined,
           initiator_name: "Oluwaniyii Ayodele",
           initiator_bank: "democredit",
-          initiator_account: "e327df07-db8e-455c-8d37-01cef7d56ade",
+          initiatingWallet: "e327df07-db8e-455c-8d37-01cef7d56ade",
           created_at: new Date().toISOString()
         };
         const walletData = {
@@ -243,7 +241,7 @@ describe("TransactionFund", function() {
           .resolves(FakePaystackVeificationResponse.failure);
 
         transactionFund.setTransactionId(transaction_id);
-        const action = await transactionFund.completeFund();
+        await transactionFund.completeFund();
 
         sinon.assert.notCalled(deposit);
         sinon.assert.calledOnceWithMatch(updateTransaction, {
@@ -251,8 +249,6 @@ describe("TransactionFund", function() {
           amount: FakePaystackVeificationResponse.failure.data.amount / 100,
           status: FakePaystackVeificationResponse.failure.data.status
         });
-
-        // console.log(action);
 
         getTransaction.restore();
         updateTransaction.restore();
