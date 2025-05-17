@@ -8,6 +8,7 @@ import AccountValidation from "./AccountValidation";
 import Bcrypt from "../../libraries/bcrypt";
 import UUID from "../../libraries/uuid";
 import WalletService from "../wallet/WalletService";
+import AccountViewAllInfo from "./AccountViewAllInfo";
 
 // create dependencies once to save memory
 const accountRepository = new AccountRepository();
@@ -52,6 +53,17 @@ class AccountController {
 
       const action = await accountLogin.init();
       return AccountResponseFormat.signIn(res, action);
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  // support
+  public static async getAccountAllInfo(req: Request, res: Response, next: NextFunction) {
+    try {
+      const accountViewAllInfo = new AccountViewAllInfo(accountRepository, walletService);
+      const action = await accountViewAllInfo.init();
+      return AccountResponseFormat.getAccountAllInfo(res, action);
     } catch (e) {
       next(e);
     }

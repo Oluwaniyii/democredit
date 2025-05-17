@@ -11,7 +11,8 @@ const walletRepository = new WalletRepository();
 class WalletController {
   public static async getWallet(req: Request, res: Response, next: NextFunction) {
     try {
-      const { wallet_id } = req.params;
+      const { wallet_id } = res.locals.authenticated_user;
+
       const walletView = new WalletView(walletRepository);
       const action = await walletView.init(wallet_id);
       return WalletResponseFormat.getWallet(res, action);

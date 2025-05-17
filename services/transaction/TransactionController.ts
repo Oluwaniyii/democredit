@@ -54,6 +54,8 @@ class TransactionController {
       const { wallet_id } = res.locals.authenticated_user;
       const { receiver_wallet_id, amount } = await TransactionValidation.wallet2Wallet(req.body);
 
+      console.log(req.body);
+
       const transactionWallet2Wallet = new TransactionWallet2Wallet(
         transactionRepository,
         walletService

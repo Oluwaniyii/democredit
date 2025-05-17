@@ -171,7 +171,7 @@ class TransactionWallet2Other extends Transaction {
       this.amount,
       "DEBIT",
       this.initiatorWallet.getBalance(),
-      `bank transfer to ${this.accountName} ${this.accountNumber} ${this.bankName} ${this.accountNumber}`
+      `bank transfer to ${this.accountName}`
     );
   }
 

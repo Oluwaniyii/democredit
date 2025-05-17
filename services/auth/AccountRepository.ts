@@ -54,6 +54,11 @@ class AccountRepository implements IAccountRepository {
       );
     else return null;
   }
+
+  async getAllAccounts(): Promise<any> {
+    const users = await UserModel.findAll({ raw: true });
+    return users;
+  }
 }
 
 export default AccountRepository;

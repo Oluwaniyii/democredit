@@ -57,7 +57,7 @@ class TransactionWallet2Wallet extends Transaction {
       this.amount,
       "DEBIT",
       this.initiatorWallet.getBalance(),
-      `wallet transfer to ${this.receiverWallet.getAccountName()} ${this.receiverWallet.getId()}`
+      `wallet transfer to ${this.receiverWallet.getAccountName()}`
     );
 
     await this._repository.writeLog(
@@ -66,7 +66,7 @@ class TransactionWallet2Wallet extends Transaction {
       this.amount,
       "CREDIT",
       this.receiverWallet.getBalance(),
-      `wallet deposit from ${this.initiatorWallet.getAccountName()} ${this.initiatorWallet.getId()}`
+      `wallet deposit from ${this.initiatorWallet.getAccountName()}`
     );
   }
 
